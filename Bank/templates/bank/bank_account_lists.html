@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bank Accounts</title>
+</head>
+<body>
+    <h1>Bank Accounts</h1>
+    <ul>
+        {% for account in accounts %}
+            <li>{{ account.bank_name }} - {{ account.account_number }} - {{ account.balance }}</li>
+            <a href="{% url 'bank:add_transaction' account.id %}">Add Transaction</a>
+        {% endfor %}
+    </ul>
+</body>
+</html>
