@@ -2,9 +2,13 @@
 <html>
 <head>
     <title>Home</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+
 </head>
 <body>
     <h1>AQ Bank</h1>
+    <img src="{% static 'images/pngwing.com.png' %}" alt="AQ Bank Logo" class="logo">
     <a href="{% url 'login' %}">Login</a>
     <a href="{% url 'register' %}">Register</a>
 </body>

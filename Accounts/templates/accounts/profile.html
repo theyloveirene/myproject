@@ -2,9 +2,12 @@
 <html>
 <head>
     <title>Profile</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 </head>
 <body>
     <h2>Profile</h2>
+    <img src="{% static 'images/pexels-davidmcbee-730547.jpg' %}" alt="Profile Image" class="profile-image">
     <form method="POST">
         {% csrf_token %}
         {{ u_form.as_p }}
