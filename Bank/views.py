@@ -1,23 +1,42 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from .models import BankAccount, BankTransaction
-from .forms import BankTransactionForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from .forms import BankForm, BranchForm
+from .models import Bank, Branch
 
-def bank_account_list(request):
-    accounts = BankAccount.objects.filter(user=request.user)
-    return render(request, 'bank/bank_account_list.html', {'accounts': accounts})
+def home(request):
+    return render(request, 'bank/home.html')
 
-def add_transaction(request, account_id):
-    account = get_object_or_404(BankAccount, id=account_id)
+
+
+def add_bank(request):
     if request.method == 'POST':
-        form = BankTransactionForm(request.POST)
+        form = BankForm(request.POST)
         if form.is_valid():
-            transaction = form.save(commit=False)
-            transaction.bank_account = account
-            transaction.save()
-            return HttpResponseRedirect(reverse('bank:bank_account_list'))
+            bank = form.save(commit=False)
+            bank.owner = request.user
+            bank.save()
+            return redirect('bank_details', bank_id=bank.id)
     else:
-        form = BankTransactionForm()
-    return render(request, 'bank/add_transaction.html', {'form': form, 'account': account})
+        form = BankForm()
+    return render(request, 'bank/add_bank.html', {'form': form})
 
+
+def add_branch(request):
+    if request.method == 'POST':
+        form = BranchForm(request.POST)
+        if form.is_valid():
+            branch = form.save()
+            return redirect('branch_details', branch_id=branch.id)
+    else:
+        form = BranchForm()
+    return render(request, 'bank/add_branch.html', {'form': form})
+
+def bank_details(request, bank_id):
+    bank = get_object_or_404(Bank, id=bank_id)
+    return render(request, 'bank/bank_details.html', {'bank': bank})
+
+
+def branch_details(request, branch_id):
+    branch = get_object_or_404(Branch, id=branch_id)
+    return render(request, 'bank/branch_details.html', {'branch': branch})
